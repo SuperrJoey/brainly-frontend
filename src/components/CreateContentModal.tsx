@@ -1,9 +1,22 @@
 import { CloseIcon } from "../icons/CloseIcon"
 import { Button } from "./Button"
 import { Input } from "./Input"
+import { useRef, useState } from "react"
 
+enum ContentType {
+    Youtube = "youtube",
+    Twitter = "twitter"
+}
 
 export const CreateContentModal = ({open, onClose }) => {
+    const titleRef = useRef<HTMLInputElement>();
+    const linkRef = useRef<HTMLInputElement>();
+    const [type, setType] = useState(ContentType.Youtube);
+
+    function addContent() {
+        const title = titleRef.current?.value;
+        const link = linkRef.current?.value;
+    }
 
     return <div>
         {open && <div
@@ -17,11 +30,26 @@ export const CreateContentModal = ({open, onClose }) => {
                         </div>
                     </div>
                     <div>
-                        <Input placeholder="title"/>
-                        <Input placeholder="link"/>
+                        <Input reference={titleRef} placeholder="title"/>
+                        <Input reference={linkRef} placeholder="link"/>
                     </div>
+                <div><h1 className="flex justify-center">Type</h1>
+                    <div className="flex justify-evenly mb-2 my-2">
+                    <Button text="Youtube" variant={type === ContentType.Youtube ? 
+                        "primary" : "secondary"} onClick={() => {
+                            setType(ContentType.Youtube)
+                        }}
+                        />
+                    <Button text="twitter" variant={type === ContentType.Twitter ? 
+                        "primary" : "secondary"} onClick={() => {
+                            setType(ContentType.Twitter)
+                        }}
+                        />
+                        </div>
+                </div>
+
                     <div className="flex justify-center">
-                    <Button variant="primary" text="submit"/>
+                    <Button onClick={addContent} variant="primary" text="submit"/>
                     </div>
                 </span>
             </div>
