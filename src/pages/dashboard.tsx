@@ -5,9 +5,11 @@ import { CreateContentModal } from '../components/CreateContentModal'
 import { PlusIcon } from '../icons/PlusIcon'
 import { ShareIcon } from '../icons/ShareIcon'
 import { Sidebar } from '../components/Sidebar'
+import { useContent } from '../hooks/useContent'
 
 function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
+  const contents = useContent();
 
   return (
     <div>
@@ -34,16 +36,13 @@ function Dashboard() {
      variant="secondary" 
      text="Add Content"/>
     </div>
-    <div className='flex justify-normal'>
-     <Card 
-     type="twitter" 
-     link="https://x.com/superrjoey/status/1875173793624416360"
-     title="first tweet"/>
-
-     <Card 
-     type="youtube" 
-     link="https://www.youtube.com/watch?v=xuaJIKUQoNA"
-     title="youtube video"/>
+    <div className='flex gap-4'>
+      {contents.map(({type, link, title}) => <Card 
+          type={type} 
+          link={link}
+          title={title}
+          />
+    )}
     </div>
     </div>
     </div>
