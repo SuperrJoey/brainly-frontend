@@ -2,6 +2,7 @@ import { BACKEND_URL } from "../config"
 import { CloseIcon } from "../icons/CloseIcon"
 import { Button } from "./Button"
 import { Input } from "./Input"
+import axios from "axios"
 import { useRef, useState } from "react"
 
 enum ContentType {
@@ -27,6 +28,7 @@ export const CreateContentModal = ({open, onClose }) => {
                 "Authorization" : localStorage.getItem("token")
             }
         })
+        onClose();
     }
 
     return <div>
