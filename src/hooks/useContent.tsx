@@ -15,33 +15,30 @@ export function useContent() {
     const [contents, setContents] = useState<Content[]>([]);
 
     function refresh() {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            console.warn("No token found in local storage");
-            setContents([]);
-            return;
-        }
         axios.get(`${BACKEND_URL}/api/v1/content`, {
-            headers: {
-                Authorization : token
-            },
+            withCredentials: true
         })
-            .then((response) => {
-                const data = response.data?.content;
-                console.log("API response:", data);
-    
-                if(Array.isArray(data)) {
-                    setContents(data);
-                } else {
-                    console.warn("Response data is not an array:", data);
-                    setContents([]);
-                }
-    
-            })
-            .catch((error) => {
-                console.error("Failed to fetch contents", error.message);
+        .then((response) => {
+            const data = response.data?.content;
+            console.log("API response:", data);
+
+            if(Array.isArray(data)) {
+                setContents(data);
+            } else {
+                console.warn("Response data is not an array:", data);
                 setContents([]);
-            })
+            }
+        })
+        .catch((error) => {
+            console.error("Failed to fetch contents", error.message);
+
+            if (error.response?.status === 401) {
+                console.warn("Unauthorized! Logging out..");
+                window.location.href = "/signin";
+            }
+
+            setContents([]);
+        })
 
     }
 

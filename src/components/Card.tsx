@@ -5,6 +5,7 @@ import CardTwitterIcon from "../icons/cardTwitterIcon";
 import { useEffect } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { useState } from "react";
 
 interface CardProps {
     title: string;
@@ -14,6 +15,7 @@ interface CardProps {
 }
 
 export function Card({title, link, type, contentId} : CardProps) {
+    const [showPopup, setShowPopup] = useState(false);
 
     const getYouTubeEmbedLink = (url: string) => {
         if (url.includes("watch?v=")) {
@@ -48,7 +50,10 @@ export function Card({title, link, type, contentId} : CardProps) {
                 const shareUrl = `http://localhost:5173${response.data.shareLink}`;
                 navigator.clipboard.writeText(shareUrl);
                 console.log("Share Link copied to clipboard:", shareUrl);
+                setShowPopup(true);
+                setTimeout(() => setShowPopup(false), 2000);
             }
+
         } catch (error) {
             console.error("Failed to share content:", error);
         }
@@ -97,6 +102,12 @@ export function Card({title, link, type, contentId} : CardProps) {
             </blockquote>}
         </div>
         </div>
+
+        {showPopup && (
+            <div className="fixed bottom-5 right-5 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out">
+                Link copied successfully!
+            </div>
+        )}
     </div>
 }
 //

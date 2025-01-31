@@ -22,7 +22,6 @@ export function Shared() {
     const [content, setContent] = useState<SharedContent | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null >(null);
-    const [owner, setOwner] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchSharedContent = async() => {
@@ -46,6 +45,7 @@ export function Shared() {
         fetchSharedContent();
     }, [shareId]);
 
+
     if(loading) {
         return <div>
             Loading...
@@ -57,15 +57,66 @@ export function Shared() {
             {error}
         </div>
     }
+
+    const renderContent = () => {
+        if(content?.type === "youtube") {
+            let videoId = " ";
+            try {
+                 videoId = new URL(content.link).searchParams.get("v") ||
+                                content.link.split("v=")[1]?.split("&")[0];
+
+                if (!videoId && content.link.includes("youtu.be/")) {
+                    videoId = content.link.split("youtu.be/")[1]?.split("?")[0];
+                }
+
+            } catch (error) {
+                console.error("Invalid YouTube URL:", content.link)
+            }
+
+            return videoId ? (
+                <div className="relative w-full mt-4 overflow-hidden rounded-lg">
+                    <div className="aspect-auto">
+                    <iframe 
+                        src={`https://www.youtube.com/embed/${videoId}`} 
+                        width="100%"
+                        height="100%"    
+                        allowFullScreen
+                        className="rounded-lg"
+                    />
+                    </div>
+                </div>
+            ) : (
+                <p className="text-red-500">Invalid YouTube link</p>
+            );
+        }
+
+        return (
+            <a 
+            href={content?.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+            >
+                {content?.link}
+            </a>
+        )
+    }
+
     return (
-        <div className="max-w-4xl mx-auto p-4">
+        <div className="max-w-2xl mx-auto p-4">
             <div className="bg-white shadow rounded-lg p-6">
                 <h1 className="text-2xl font-bold mb-4 flex justify-center">
                     {content?.title}
                 </h1>
 
                 <div className="mb-4 text-gray-600 flex justify-end">
-                    <span className="">Shared by: {content?.userId?.username}</span>  
+                    <span className="">Shared by: {content?.userId?.username || "Unknown user"}</span>  
+                </div>
+
+                {renderContent()}
+
+                <div className="mt-4">
+                    <p className="text-gray-600">Type: {content?.type}</p>
                 </div>
             </div>
         </div>

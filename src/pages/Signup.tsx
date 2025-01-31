@@ -26,8 +26,10 @@ export function Signup() {
         }
     }
 
-    return <div className="h-screen w-screen bg-gray-200 flex
-    justify-center items-center">
+    return ( 
+    <div className="h-screen w-screen bg-gray-200">
+        <h3 className="flex justify-center text-purple-700 text-2xl p-10">Welcome to brainly</h3>
+        <div className="flex justify-center items-center my-10">
         <div className="bg-white rounded-md border min-w-48 p-4">
             <Input reference={usernameRef} placeholder="Username" />
             <Input reference={passwordRef} placeholder="Password" />
@@ -37,5 +39,7 @@ export function Signup() {
             </div>
 
         </div>
-    </div>   
+        </div>
+    </div>  
+    ) 
 }
